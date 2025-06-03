@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Aviator Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding-top: 50px;
+    }
+    #plane {
+      font-size: 50px;
+      transition: transform 0.5s linear;
+    }
+    #multiplier {
+      font-size: 30px;
+      margin: 20px 0;
+    }
+    #cashOut {
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #e91e63;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="plane">✈️</div>
+  <div id="multiplier">1.00x</div>
+  <button id="cashOut">Cash Out</button>
+  <div id="status"></div>
+
+  <script>
+    let multiplier = 1.00;
+    let interval;
+    let isCashedOut = false;
+
+    function startGame() {
+      interval = setInterval(() => {
+        multiplier += 0.01 + Math.random() * 0.05;
+        multiplier = parseFloat(multiplier.toFixed(2));
+        document.getElementById('multiplier').textContent = multiplier + 'x';
+        document.getElementById('plane').style.transform = `translateY(-${multiplier * 5}px)`;
+
+        if (multiplier >= 10 && !isCashedOut) {
+          endGame(false);
+        }
+      }, 100);
+    }
+
+    function endGame(success) {
+      clearInterval(interval);
+      const status = document.getElementById('status');
+      if (success) {
+        status.textContent = 'You cashed out at ' + multiplier + 'x!';
+        status.style.color = 'lightgreen';
+      } else {
+        status.textContent = 'Boom! Plane crashed at ' + multiplier + 'x!';
+        status.style.color = 'red';
+      }
+    }
+
+    document.getElementById('cashOut').addEventListener('click', () => {
+      if (!isCashedOut) {
+        isCashedOut = true;
+        endGame(true);
+      }
+    });
+
+    startGame();
+  </script>
+
+</body>
+</html>
